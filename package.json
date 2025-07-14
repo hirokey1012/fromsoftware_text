@@ -5,11 +5,12 @@
   "main": "scraper.js",
   "scripts": {
     "start": "node scraper.js",
-    "auto": "node run-scraper.js",
-    "csv": "node csv-scraper.js",
-    "fromsoft": "node fromsoft-scraper.js",
-    "sample": "node sample-scraper.js",
-    "test": "node test-scraper.js"
+    "scrape:eldenring": "node scraper.js https://kamikouryaku.net/eldenring/",
+    "scrape:darksouls": "node scraper.js https://kamikouryaku.net/darksouls/",
+    "scrape:darksouls2": "node scraper.js https://kamikouryaku.net/darksouls2/",
+    "scrape:darksouls3": "node scraper.js https://kamikouryaku.net/darksouls3/",
+    "scrape:bloodborne": "node scraper.js https://kamikouryaku.net/bloodborne/",
+    "scrape:sekiro": "node scraper.js https://kamikouryaku.net/sekiro/"
   },
   "dependencies": {
     "axios": "^1.6.0",

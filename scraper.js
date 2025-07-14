@@ -3,13 +3,37 @@ import * as cheerio from 'cheerio';
 import fs from 'fs-extra';
 import iconv from 'iconv-lite';
 
-class EldenRingFlavorTextScraper {
-    constructor() {
-        this.baseUrl = 'https://kamikouryaku.net/eldenring/';
+class FromSoftwareFlavorTextScraper {
+    constructor(baseUrl = 'https://kamikouryaku.net/eldenring/') {
+        this.baseUrl = baseUrl;
         this.results = [];
         this.delay = 300; // 0.3秒待機 (レート制限を緩和)
         this.batchSize = 50; // バッチ処理用
-        this.resumeFile = 'scraper_resume.json';
+        this.resumeFile = 'progress/scraper_resume.json';
+        this.gameName = this.detectGameName(baseUrl);
+    }
+
+    detectGameName(url) {
+        // URLからゲーム名を判定
+        const gameMap = {
+            'eldenring': 'エルデンリング',
+            'darksouls': 'ダークソウル',
+            'darksouls2': 'ダークソウル2',
+            'darksouls3': 'ダークソウル3',
+            'bloodborne': 'ブラッドボーン',
+            'sekiro': 'SEKIRO',
+            'demons-souls': 'デモンズソウル',
+            'armored-core': 'アーマード・コア'
+        };
+
+        // URLからゲーム識別子を抽出
+        const match = url.match(/kamikouryaku\.net\/([^\/]+)/);
+        if (match) {
+            const gameId = match[1];
+            return gameMap[gameId] || gameId;
+        }
+        
+        return 'Unknown Game';
     }
 
     async sleep(ms) {
@@ -56,6 +80,62 @@ class EldenRingFlavorTextScraper {
         return links;
     }
 
+    isValidFlavorText(text) {
+        if (!text || text.trim() === '') return false;
+        
+        // 除外パターン
+        const excludePatterns = [
+            // Wiki編集機能
+            /^編集$/,
+            /^新規$/,
+            /^名前変更$/,
+            /^添付$/,
+            /^一覧$/,
+            /^差分$/,
+            /^履歴$/,
+            /^凍結$/,
+            /^MenuBar$/,
+            /^コメント$/,
+            /^アップデート情報$/,
+            /^実績・トロフィー$/,
+            /^ビルド$/,
+            /^用語集$/,
+            
+            // 攻略解説や説明文
+            /ちなみに|続いて注意点|呪剣士は視界察知型|この睡眠がたまりきった時|視界に入らなければ/,
+            /ガード強度とは別に|弾きやすさとも言える|PvPでは|内部データの解析/,
+            /飛び上がり、遠くから|連続攻撃のモーション中|起き上がりに重ねられると/,
+            /Ver\.1\.00のテキスト/,
+            /\[ERROR\]/,
+            /本アップデートファイル/,
+            /アップデートファイル1\.04/,
+            
+            // URLパターン
+            /^https?:\/\//,
+            /^#[a-zA-Z0-9]+$/,
+            /^[a-zA-Z0-9]{8}$/,
+            
+            // 空のフレーバーテキスト
+            /^（フレーバーテキストなし）$/
+        ];
+        
+        // 除外パターンをチェック
+        for (const pattern of excludePatterns) {
+            if (pattern.test(text)) {
+                return false;
+            }
+        }
+        
+        // 攻略解説らしい長いテキストを除外
+        if (text.length > 200 && 
+            (text.includes('攻撃') || text.includes('ダメージ') || text.includes('効果') || 
+             text.includes('注意') || text.includes('対策') || text.includes('戦略'))) {
+            return false;
+        }
+        
+        return true;
+    }
+
     extractFlavorText(html, itemName) {
         const $ = cheerio.load(html);
         let flavorText = '';
@@ -76,7 +156,7 @@ class EldenRingFlavorTextScraper {
                     nextElement = nextElement.next();
                 }
                 
-                if (textContent.trim()) {
+                if (textContent.trim() && this.isValidFlavorText(textContent.trim())) {
                     flavorText = textContent.trim();
                     return false; // break
                 }
@@ -89,7 +169,8 @@ class EldenRingFlavorTextScraper {
                 const text = $(element).text().trim();
                 // 日本語の詩的な表現っぽいパターンを探す
                 if (text.length > 20 && text.length < 500 && 
-                    (text.includes('という') || text.includes('である') || text.includes('のだ'))) {
+                    (text.includes('という') || text.includes('である') || text.includes('のだ')) &&
+                    this.isValidFlavorText(text)) {
                     flavorText = text;
                     return false; // break
                 }
@@ -167,6 +248,7 @@ class EldenRingFlavorTextScraper {
                 const flavorText = this.extractFlavorText(html, item.name);
                 
                 this.results.push({
+                    game: this.gameName,
                     name: item.name,
                     url: item.url,
                     flavorText: flavorText || '（フレーバーテキストなし）'
@@ -187,8 +269,11 @@ class EldenRingFlavorTextScraper {
     }
 
     async saveIntermediateResults(processedCount) {
+        // progressディレクトリが存在しない場合は作成
+        await fs.ensureDir('progress');
+        
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-        const filename = `flavor_texts_progress_${timestamp}.json`;
+        const filename = `progress/flavor_texts_progress_${timestamp}.json`;
         
         // 進捗保存
         await fs.writeJson(filename, {
@@ -229,9 +314,9 @@ class EldenRingFlavorTextScraper {
         await fs.writeJson(jsonFilename, this.results, { spaces: 2 });
         
         // CSV形式で保存（Shift-JIS）
-        const csvHeader = 'アイテム名,URL,フレーバーテキスト\n';
+        const csvHeader = 'ゲーム,アイテム名,URL,フレーバーテキスト\n';
         const csvContent = this.results.map(item => 
-            `"${item.name}","${item.url}","${item.flavorText.replace(/"/g, '""')}"`
+            `"${item.game}","${item.name}","${item.url}","${item.flavorText.replace(/"/g, '""')}"`
         ).join('\n');
         
         const csvData = csvHeader + csvContent;
@@ -246,7 +331,7 @@ class EldenRingFlavorTextScraper {
 
     async run() {
         try {
-            console.log('エルデンリング フレーバーテキスト抽出開始');
+            console.log(`${this.gameName} フレーバーテキスト抽出開始`);
             
             const itemLinks = await this.scrapeItemCategories();
             if (itemLinks.length === 0) {
@@ -258,7 +343,7 @@ class EldenRingFlavorTextScraper {
             await this.saveResults();
             
             // 最終的な統計情報を表示
-            const successCount = this.results.filter(r => r.flavorText !== '（フレーバーテキストなし）').length;
+            const successCount = this.results.filter(r => r.flavorText !== '（フレーバーテキストなし）' && this.isValidFlavorText(r.flavorText)).length;
             console.log(`\n📊 統計情報:`);
             console.log(`  - 総アイテム数: ${this.results.length}`);
             console.log(`  - フレーバーテキスト取得成功: ${successCount}`);
@@ -280,5 +365,14 @@ class EldenRingFlavorTextScraper {
 }
 
 // 実行
-const scraper = new EldenRingFlavorTextScraper();
-scraper.run();
+// コマンドライン引数からベースURLを取得（デフォルトはエルデンリング）
+const baseUrl = process.argv[2] || 'https://kamikouryaku.net/eldenring/';
+const scraper = new FromSoftwareFlavorTextScraper(baseUrl);
+
+// モジュールとしてエクスポート
+export { FromSoftwareFlavorTextScraper };
+
+// 直接実行の場合のみrun()を実行
+if (import.meta.url === `file://${process.argv[1]}`) {
+    scraper.run();
+}

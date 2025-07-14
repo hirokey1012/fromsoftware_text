@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**FromSoftware Text Extractor** - An advanced web scraper designed to extract flavor texts and item descriptions from FromSoftware game wikis. Currently supports Elden Ring with plans to expand to other FromSoftware titles like Dark Souls, Bloodborne, and Sekiro.
+**FromSoftware Text Extractor** - An advanced web scraper designed to extract flavor texts and item descriptions from FromSoftware game wikis. Supports multiple FromSoftware titles including Elden Ring, Dark Souls series, Bloodborne, and Sekiro.
 
 ## Commands
 
@@ -13,8 +13,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 # Install dependencies
 npm install
 
-# Run the scraper
+# Run the scraper (default: Elden Ring)
 npm start
+
+# Run scraper for specific games
+npm run scrape:eldenring
+npm run scrape:darksouls
+npm run scrape:darksouls2
+npm run scrape:darksouls3
+npm run scrape:bloodborne
+npm run scrape:sekiro
+
+# Run scraper with custom URL
+node scraper.js https://kamikouryaku.net/[game]/
 ```
 
 ### File Structure
@@ -27,20 +38,23 @@ npm start
 ## Architecture
 
 ### Core Components
-- **EldenRingFlavorTextScraper**: Main scraper class handling data extraction
+- **FromSoftwareFlavorTextScraper**: Main scraper class handling data extraction for multiple games
 - **Web Interface**: HTML/CSS/JS viewer for browsing results
 - **Data Output**: JSON and CSV formats for extracted flavor texts
 
 ### Key Features
-- Scrapes kamikouryaku.net Elden Ring wiki
+- Scrapes kamikouryaku.net wikis for multiple FromSoftware games
+- Dynamic game detection from URL
 - Extracts flavor text from item pages
 - Outputs data in JSON and CSV formats
 - Responsive web interface with search functionality
 - Rate limiting to be respectful to target site
+- Support for multiple games: Elden Ring, Dark Souls series, Bloodborne, Sekiro
 
 ### Data Structure
-- Each item has: game, category, name, flavorText
-- CSV Format: 作品名,アイテムカテゴリ,アイテム名,フレーバーテキスト
+- Each item has: game, name, url, flavorText
+- CSV Format: ゲーム,アイテム名,URL,フレーバーテキスト
+- Game names are automatically detected from the source URL
 - Categories: 道具, アイテム製作素材, 強化素材, 鈴玉, 貴重品, 絵画 (エルデンリング), 武器, 防具, アイテム (他ゲーム)
 
 ## Development Notes

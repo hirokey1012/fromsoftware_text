@@ -4,11 +4,8 @@ output/
 # Node modules
 node_modules/
 
-# Resume data
-scraper_resume.json
-
-# Progress files
-*_progress_*.json
+# Progress files and resume data
+progress/
 
 # Sample files
 *sample*.csv
