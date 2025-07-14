@@ -221,10 +221,11 @@ class EldenRingFlavorTextScraper {
     }
 
     async saveResults() {
-        const timestamp = this.getJapanTimestamp();
+        // outputディレクトリが存在しない場合は作成
+        await fs.ensureDir('output');
         
         // JSON形式で保存
-        const jsonFilename = `flavor_texts_${timestamp}.json`;
+        const jsonFilename = 'output/flavor_texts.json';
         await fs.writeJson(jsonFilename, this.results, { spaces: 2 });
         
         // CSV形式で保存（Shift-JIS）
@@ -235,7 +236,7 @@ class EldenRingFlavorTextScraper {
         
         const csvData = csvHeader + csvContent;
         const csvBuffer = iconv.encode(csvData, 'shift_jis');
-        const csvFilename = `flavor_texts_${timestamp}.csv`;
+        const csvFilename = 'output/flavor_texts.csv';
         await fs.writeFile(csvFilename, csvBuffer);
         
         console.log(`結果を保存しました: ${this.results.length}件`);

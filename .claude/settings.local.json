@@ -13,7 +13,10 @@
       "Bash(npm test)",
       "Bash(npm run:*)",
       "Bash(npm install:*)",
-      "WebFetch(domain:bloodborne.swiki.jp)"
+      "WebFetch(domain:bloodborne.swiki.jp)",
+      "Bash(mkdir:*)",
+      "Bash(mv:*)",
+      "Bash(git add:*)"
     ],
     "deny": []
   }
