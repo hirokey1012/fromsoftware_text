@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>エルデンリング フレーバーテキスト一覧</title>
+    <title>FromSoftware フレーバーテキスト一覧</title>
     <style>
         * {
             margin: 0;
@@ -144,7 +144,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🗡️ エルデンリング フレーバーテキスト一覧 🛡️</h1>
+            <h1 id="pageTitle">🗡️ FromSoftware フレーバーテキスト一覧 🛡️</h1>
             <p>アイテムの味わい深いフレーバーテキストを探索しよう</p>
         </div>
         
@@ -157,6 +157,9 @@
             <input type="text" id="searchBox" class="search-box" placeholder="アイテム名やフレーバーテキストで検索..." />
             
             <div class="stats">
+                <div class="stat-item">
+                    <strong>ゲーム:</strong> <span id="gameName">-</span>
+                </div>
                 <div class="stat-item">
                     <strong>総アイテム数:</strong> <span id="totalItems">0</span>
                 </div>
@@ -198,6 +201,12 @@
                     const text = await file.text();
                     this.items = JSON.parse(text);
                     this.filteredItems = [...this.items];
+                    
+                    // ゲーム名を判定してタイトルを更新
+                    const gameNames = [...new Set(this.items.map(item => item.game))];
+                    const displayGameName = gameNames.length === 1 ? gameNames[0] : '複数ゲーム';
+                    document.getElementById('pageTitle').textContent = `🗡️ ${displayGameName} フレーバーテキスト一覧 🛡️`;
+                    
                     this.render();
                     this.updateStats();
                     
@@ -236,6 +245,7 @@
                     
                     card.innerHTML = `
                         <div class="item-name">${this.escapeHtml(item.name)}</div>
+                        ${item.game ? `<div style="color: #666; font-size: 0.9em; margin-bottom: 10px;">📱 ${this.escapeHtml(item.game)}</div>` : ''}
                         <div class="flavor-text ${hasFlavorText ? '' : 'no-flavor'}">
                             ${this.escapeHtml(item.flavorText)}
                         </div>
@@ -249,6 +259,11 @@
                 const withFlavor = this.items.filter(item => 
                     item.flavorText && item.flavorText !== '（フレーバーテキストなし）'
                 ).length;
+                
+                // ゲーム名を表示
+                const gameNames = [...new Set(this.items.map(item => item.game))];
+                const displayGameName = gameNames.length === 1 ? gameNames[0] : `${gameNames.length}ゲーム`;
+                document.getElementById('gameName').textContent = displayGameName;
                 
                 document.getElementById('totalItems').textContent = this.items.length;
                 document.getElementById('withFlavor').textContent = withFlavor;

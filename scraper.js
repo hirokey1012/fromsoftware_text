@@ -40,18 +40,26 @@ class FromSoftwareFlavorTextScraper {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    async fetchPage(url) {
+    async fetchPage(url, retryCount = 0) {
+        const maxRetries = 3;
+        
         try {
             await this.sleep(this.delay);
             const response = await axios.get(url, {
                 timeout: 30000,
                 headers: {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
                 }
             });
             return response.data;
         } catch (error) {
-            console.error(`エラー: ${url} - ${error.message}`);
+            if (retryCount < maxRetries && (error.code === 'ECONNRESET' || error.code === 'ETIMEDOUT' || error.response?.status >= 500)) {
+                console.warn(`⚠️ リトライ ${retryCount + 1}/${maxRetries}: ${url} - ${error.message}`);
+                await this.sleep(this.delay * Math.pow(2, retryCount)); // 指数バックオフ
+                return this.fetchPage(url, retryCount + 1);
+            }
+            
+            console.error(`❌ エラー: ${url} - ${error.message}`);
             return null;
         }
     }
@@ -65,7 +73,7 @@ class FromSoftwareFlavorTextScraper {
             const href = $(element).attr('href');
             const title = $(element).attr('title') || $(element).text().trim();
             
-            if (href && href.startsWith('./?' || href.startsWith('?')) && title) {
+            if (href && (href.startsWith('./?') || href.startsWith('?')) && title) {
                 const fullUrl = href.startsWith('./') ? 
                     this.baseUrl + href.substring(2) : 
                     this.baseUrl + href;
@@ -181,21 +189,24 @@ class FromSoftwareFlavorTextScraper {
     }
 
     async scrapeItemCategories() {
-        console.log('アイテムカテゴリを取得中...');
+        console.log('📂 アイテムカテゴリを取得中...');
         
-        const categories = [
-            '道具',
-            'アイテム製作素材', 
-            '強化素材',
-            '鈴玉',
-            '貴重品',
-            '絵画'
-        ];
+        // ゲームごとに異なるカテゴリをサポート
+        const categoryMap = {
+            'エルデンリング': ['道具', 'アイテム製作素材', '強化素材', '鈴玉', '貴重品', '絵画'],
+            'ダークソウル': ['道具', 'アイテム製作素材', '強化素材', '鈴玉', '貴重品'],
+            'ダークソウル2': ['道具', 'アイテム製作素材', '強化素材', '鈴玉', '貴重品'],
+            'ダークソウル3': ['道具', 'アイテム製作素材', '強化素材', '鈴玉', '貴重品'],
+            'ブラッドボーン': ['道具', 'アイテム製作素材', '強化素材', '鈴玉', '貴重品'],
+            'SEKIRO': ['道具', 'アイテム製作素材', '強化素材', '鈴玉', '貴重品']
+        };
+        
+        const categories = categoryMap[this.gameName] || categoryMap['エルデンリング'];
         
         const allLinks = [];
         
         for (const category of categories) {
-            console.log(`カテゴリ「${category}」を処理中...`);
+            console.log(`📁 カテゴリ「${category}」を処理中...`);
             const encodedCategory = encodeURIComponent(category);
             const categoryUrl = `${this.baseUrl}?${encodedCategory}`;
             
@@ -203,7 +214,9 @@ class FromSoftwareFlavorTextScraper {
             if (html) {
                 const links = this.extractItemLinks(html);
                 allLinks.push(...links);
-                console.log(`  ${links.length}個のアイテムリンクを発見`);
+                console.log(`  ✅ ${links.length}個のアイテムリンクを発見`);
+            } else {
+                console.log(`  ❌ カテゴリの取得に失敗`);
             }
         }
         
@@ -212,7 +225,7 @@ class FromSoftwareFlavorTextScraper {
             index === self.findIndex(l => l.url === link.url)
         );
         
-        console.log(`合計 ${uniqueLinks.length}個のユニークなアイテムを発見`);
+        console.log(`📊 合計 ${uniqueLinks.length}個のユニークなアイテムを発見`);
         return uniqueLinks;
     }
 
@@ -241,7 +254,8 @@ class FromSoftwareFlavorTextScraper {
         
         for (let i = startIndex; i < itemLinks.length; i++) {
             const item = itemLinks[i];
-            console.log(`${i + 1}/${itemLinks.length}: ${item.name}`);
+            const progress = ((i + 1) / itemLinks.length * 100).toFixed(1);
+            console.log(`[${progress}%] ${i + 1}/${itemLinks.length}: ${item.name}`);
             
             const html = await this.fetchPage(item.url);
             if (html) {
@@ -254,11 +268,13 @@ class FromSoftwareFlavorTextScraper {
                     flavorText: flavorText || '（フレーバーテキストなし）'
                 });
                 
-                if (flavorText) {
-                    console.log(`  ✓ フレーバーテキスト取得成功`);
+                if (flavorText && this.isValidFlavorText(flavorText)) {
+                    console.log(`  ✅ フレーバーテキスト取得成功`);
                 } else {
-                    console.log(`  - フレーバーテキストなし`);
+                    console.log(`  ⚪ フレーバーテキストなし`);
                 }
+            } else {
+                console.log(`  ❌ ページの取得に失敗`);
             }
             
             // バッチごとに中間保存
