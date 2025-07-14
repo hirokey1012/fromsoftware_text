@@ -59,10 +59,10 @@ async function createCombinedOutput() {
     await fs.writeJson(jsonFilename, validResults, { spaces: 2 });
     
     // CSV形式で保存（UTF-8）
-    const csvHeader = 'ゲーム,アイテム名,URL,フレーバーテキスト\\n';
+    const csvHeader = 'ゲーム,アイテム名,URL,フレーバーテキスト\n';
     const csvContent = validResults.map(item => 
-        `"${item.game}","${item.name}","${item.url}","${item.flavorText.replace(/"/g, '""').replace(/\\n/g, '\\\\n')}"`
-    ).join('\\n');
+        `"${item.game}","${item.name}","${item.url}","${item.flavorText.replace(/"/g, '""').replace(/\n/g, ' ')}"`
+    ).join('\n');
     
     const csvData = csvHeader + csvContent;
     const csvFilename = 'output/fromsoftware_flavor_texts.csv';
