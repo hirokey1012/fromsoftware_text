@@ -1,0 +1,19 @@
+# Output files
+output/
+
+# Node modules
+node_modules/
+
+# Resume data
+scraper_resume.json
+
+# Progress files
+*_progress_*.json
+
+# Sample files
+*sample*.csv
+*sample*.json
+
+# Backup files
+*backup*.csv
+*backup*.json
