@@ -24,7 +24,9 @@
       "WebFetch(domain:github.com)",
       "WebFetch(domain:kamikouryaku.net)",
       "WebFetch(domain:seesaawiki.jp)",
-      "WebFetch(domain:bloodborne.swiki.jp)"
+      "WebFetch(domain:bloodborne.swiki.jp)",
+      "Bash(timeout:*)",
+      "Bash(grep:*)"
     ],
     "deny": [
       "Bash(git push --force:*)",
