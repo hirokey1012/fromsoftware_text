@@ -1,0 +1,22 @@
+{
+  "name": "fromsoftware_text",
+  "version": "1.0.0",
+  "description": "FromSoftware Game Text Extractor - Advanced web scraper for extracting flavor texts and item descriptions from FromSoftware titles",
+  "main": "scraper.js",
+  "scripts": {
+    "start": "node scraper.js",
+    "auto": "node run-scraper.js",
+    "csv": "node csv-scraper.js",
+    "fromsoft": "node fromsoft-scraper.js",
+    "sample": "node sample-scraper.js",
+    "test": "node test-scraper.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "cheerio": "^1.0.0-rc.12",
+    "fs-extra": "^11.1.1",
+    "iconv-lite": "^0.6.3",
+    "jschardet": "^3.1.4"
+  },
+  "type": "module"
+}
