@@ -33,19 +33,29 @@ wss.on('connection', (ws) => {
           data: gameData
         }));
         
-        // 初期メッセージを送信
-        setTimeout(() => {
-          ws.send(JSON.stringify({
-            type: 'ai_response',
-            data: {
-              aiMessage: `さあ、始めましょうか。私は${gameData.aiStance === 'for' ? '賛成' : '反対'}派として戦います。`,
-              userScore: gameData.userScore,
-              aiScore: gameData.aiScore,
-              expression: 'normal',
-              messageCount: 0,
-              maxMessages: 20
-            }
-          }));
+        // 初期メッセージを送信（Claude APIを使用）
+        setTimeout(async () => {
+          try {
+            const initialMessage = await gameHandler.generateInitialMessage(gameData.gameId);
+            ws.send(JSON.stringify({
+              type: 'ai_response',
+              data: initialMessage
+            }));
+          } catch (error) {
+            console.error('Error generating initial message:', error);
+            // フォールバック用の定型メッセージ
+            ws.send(JSON.stringify({
+              type: 'ai_response',
+              data: {
+                aiMessage: `さあ、始めましょうか。私は${gameData.aiStance === 'for' ? '賛成' : '反対'}派として戦います。`,
+                userScore: gameData.userScore,
+                aiScore: gameData.aiScore,
+                expression: 'normal',
+                messageCount: 0,
+                maxMessages: 20
+              }
+            }));
+          }
         }, 1000);
       }
       

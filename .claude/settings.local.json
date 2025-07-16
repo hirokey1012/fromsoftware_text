@@ -34,7 +34,8 @@
       "Bash(curl:*)",
       "Bash(PORT=3001 npm start)",
       "mcp__playwright__browser_navigate",
-      "mcp__playwright__browser_install"
+      "mcp__playwright__browser_install",
+      "Bash(git checkout:*)"
     ],
     "deny": [
       "Bash(git push --force:*)",

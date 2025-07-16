@@ -318,24 +318,6 @@
     position: relative;
 }
 
-.vs-divider::before,
-.vs-divider::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    width: 30px;
-    height: 3px;
-    background: linear-gradient(90deg, transparent, #dc3545, transparent);
-    border-radius: 2px;
-}
-
-.vs-divider::before {
-    left: -40px;
-}
-
-.vs-divider::after {
-    right: -40px;
-}
 
 @keyframes pulse {
     0%, 100% {
