@@ -26,11 +26,23 @@
       "WebFetch(domain:seesaawiki.jp)",
       "WebFetch(domain:bloodborne.swiki.jp)",
       "Bash(timeout:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "WebFetch(domain:nightreign.eldenring.jp)",
+      "Bash(pkill:*)",
+      "Bash(true)",
+      "Bash(fuser:*)",
+      "Bash(curl:*)",
+      "Bash(PORT=3001 npm start)",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_install"
     ],
     "deny": [
       "Bash(git push --force:*)",
       "Bash(git push -f:*)"
     ]
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "playwright"
+  ]
 }

@@ -1,0 +1,219 @@
+/* ゲームエリア */
+.game-area {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    overflow: hidden;
+}
+
+/* スコアセクション */
+.score-section {
+    padding: 20px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #eee;
+}
+
+.score-section h3 {
+    font-size: 1.3em;
+    margin-bottom: 10px;
+    color: #333;
+    text-align: center;
+}
+
+/* ゲーム情報 */
+.game-info {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.difficulty-indicator {
+    display: inline-block;
+    padding: 6px 12px;
+    background: linear-gradient(135deg, #667eea20, #764ba220);
+    border-radius: 15px;
+    border: 1px solid #667eea40;
+    font-size: 0.9em;
+    color: #333;
+    font-weight: 500;
+}
+
+.score-bar {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.score-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 80px;
+}
+
+.score-info span:first-child {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.score-info span:last-child {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
+}
+
+.progress-container {
+    flex: 1;
+    height: 20px;
+    background: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar {
+    height: 100%;
+    position: relative;
+    display: flex;
+    width: 100%;
+}
+
+.progress-fill {
+    height: 100%;
+    transition: width 0.5s ease;
+}
+
+.user-progress {
+    background: linear-gradient(90deg, #4caf50, #66bb6a);
+    border-radius: 10px 0 0 10px;
+}
+
+.ai-progress {
+    background: linear-gradient(90deg, #f44336, #e57373);
+    border-radius: 0 10px 10px 0;
+}
+
+/* メッセージエリア */
+.messages {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.message {
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    animation: fadeIn 0.5s ease-in;
+}
+
+.message.user {
+    background: #e8f5e8;
+    border-left: 4px solid #4caf50;
+    margin-left: 80px;
+}
+
+.message.ai {
+    background: #fce4ec;
+    border-left: 4px solid #e91e63;
+    margin-right: 80px;
+}
+
+.message-header {
+    font-weight: bold;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.message-avatar {
+    display: flex;
+    align-items: center;
+    width: 160px;
+    height: 160px;
+}
+
+.message-expression {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+    border: 2px solid #e91e63;
+}
+
+.message-emoji {
+    font-size: 1.8em;
+}
+
+.message-content {
+    line-height: 1.6;
+}
+
+/* 入力エリア */
+.input-area {
+    padding: 20px;
+    background: #f8f9fa;
+    border-top: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.input-area textarea {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1em;
+    resize: vertical;
+    min-height: 60px;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.input-area textarea:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.input-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.input-area button {
+    padding: 15px 30px;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: transform 0.2s;
+    flex: 1;
+}
+
+.input-area button.btn-secondary {
+    background: linear-gradient(45deg, #6c757d, #8d959f);
+}
+
+.input-area button:hover:not(:disabled) {
+    transform: translateY(-2px);
+}
+
+.input-area button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ステータス */
+.status {
+    padding: 15px 20px;
+    background: #f8f9fa;
+    border-top: 1px solid #eee;
+    text-align: center;
+    font-style: italic;
+    color: #666;
+}

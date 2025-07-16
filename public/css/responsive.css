@@ -1,0 +1,76 @@
+/* レスポンシブデザイン */
+@media (max-width: 600px) {
+    .container {
+        padding: 10px;
+    }
+    
+    header h1 {
+        font-size: 2em;
+    }
+    
+    /* キャラクター紹介 */
+    .character-intro {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    /* 立場選択 */
+    .stance-options {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .stance-option {
+        max-width: none;
+    }
+    
+    /* ゲームコントロール */
+    .game-controls {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    /* スコアバー */
+    .score-bar {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .progress-container {
+        width: 100%;
+    }
+    
+    /* メッセージ */
+    .message.user {
+        margin-left: 20px;
+    }
+    
+    .message.ai {
+        margin-right: 20px;
+    }
+    
+    /* 入力エリア */
+    .input-area {
+        flex-direction: column;
+    }
+    
+    /* モーダル */
+    .modal-content {
+        width: 95%;
+        max-height: 90vh;
+    }
+    
+    .history-score {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    /* ゲーム結果 */
+    .game-result {
+        padding: 20px;
+    }
+    
+    .result-content h2 {
+        font-size: 1.5em;
+    }
+}

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>四宮玲を論破せよ！</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/game-setup.css">
+    <link rel="stylesheet" href="css/game-area.css">
+    <link rel="stylesheet" href="css/game-result.css">
+    <link rel="stylesheet" href="css/history-modal.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>👑 四宮玲を論破せよ！</h1>
+            <p>AIキャラクター「四宮玲」との議論バトル</p>
+        </header>
+
+        <section class="game-setup" id="gameSetup">
+            <div class="character-intro">
+                <div class="character-avatar">
+                    <img id="characterImage" src="" alt="四宮玲">
+                    <div class="character-emoji" style="display: block;">👩‍💼</div>
+                </div>
+                <div class="character-info">
+                    <h3>四宮玲 (しのみや れい)</h3>
+                    <p>あなたは彼女を論破できるか？</p>
+                </div>
+            </div>
+            
+            <div class="difficulty-selection">
+                <h4>難易度を選択してください</h4>
+                <div class="difficulty-options">
+                    <div class="difficulty-option">
+                        <input type="radio" id="difficultyEasy" name="difficulty" value="easy" checked>
+                        <label for="difficultyEasy">
+                            <span class="difficulty-icon">🟢</span>
+                            <span class="difficulty-text">初級</span>
+                            <span class="difficulty-desc">優しめの反論で、論理的な隙を残す</span>
+                        </label>
+                    </div>
+                    <div class="difficulty-option">
+                        <input type="radio" id="difficultyNormal" name="difficulty" value="normal">
+                        <label for="difficultyNormal">
+                            <span class="difficulty-icon">🟡</span>
+                            <span class="difficulty-text">中級</span>
+                            <span class="difficulty-desc">バランスの取れた反論で、適度な挑戦</span>
+                        </label>
+                    </div>
+                    <div class="difficulty-option">
+                        <input type="radio" id="difficultyHard" name="difficulty" value="hard">
+                        <label for="difficultyHard">
+                            <span class="difficulty-icon">🔴</span>
+                            <span class="difficulty-text">上級</span>
+                            <span class="difficulty-desc">鋭い反論で、高度な論理展開を要求</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stance-selection">
+                <h4>議論の立場を選択してください</h4>
+                <div class="stance-options">
+                    <div class="stance-option">
+                        <input type="radio" id="stanceFor" name="stance" value="for" checked>
+                        <label for="stanceFor">
+                            <span class="stance-icon">👍</span>
+                            <span class="stance-text">賛成派</span>
+                            <span class="stance-desc">議題に賛成する立場で議論</span>
+                        </label>
+                    </div>
+                    <div class="stance-option">
+                        <input type="radio" id="stanceAgainst" name="stance" value="against">
+                        <label for="stanceAgainst">
+                            <span class="stance-icon">👎</span>
+                            <span class="stance-text">反対派</span>
+                            <span class="stance-desc">議題に反対する立場で議論</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="game-controls">
+                <button id="startBtn" class="btn">ゲーム開始</button>
+                <button id="historyBtn" class="btn btn-green">戦績を見る</button>
+            </div>
+        </section>
+
+        <section class="game-area" id="gameArea" style="display: none;">
+            <div class="score-section">
+                <div class="topic-display">
+                    <h3 id="currentTopic"></h3>
+                    <div class="vs-display">
+                        <div class="player-stance" id="userStance"></div>
+                        <div class="vs-divider">VS</div>
+                        <div class="ai-stance" id="aiStance"></div>
+                    </div>
+                </div>
+                <div class="game-info">
+                    <span class="difficulty-indicator" id="difficultyIndicator">難易度: 中級</span>
+                </div>
+                <div class="score-bar">
+                    <div class="score-info">
+                        <span>あなた</span>
+                        <span id="userScore">0</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill user-progress" id="userProgress"></div>
+                            <div class="progress-fill ai-progress" id="aiProgress"></div>
+                        </div>
+                    </div>
+                    <div class="score-info">
+                        <span>四宮玲</span>
+                        <span id="aiScore">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="messages" id="messages" role="log" aria-live="polite"></div>
+            
+            <div class="input-area" id="inputArea">
+                <textarea id="userInput" placeholder="あなたの反論を入力してください..." aria-label="反論を入力"></textarea>
+                <div class="input-buttons">
+                    <button id="sendBtn" class="btn">送信</button>
+                    <button id="returnHomeBtn" class="btn btn-secondary">トップページに戻る</button>
+                </div>
+            </div>
+            
+            <div class="status" id="status" role="status" aria-live="polite">
+                ゲームの準備中...
+            </div>
+        </section>
+
+        <section class="game-result" id="gameResult" style="display: none;">
+            <div class="result-content">
+                <h2 id="resultTitle"></h2>
+                <p id="resultMessage"></p>
+                <div id="finalScores" class="final-scores"></div>
+                <button id="newGameBtn" class="btn">新しいゲーム</button>
+            </div>
+        </section>
+
+        <aside class="history-modal" id="historyModal" style="display: none;" role="dialog" aria-labelledby="historyModalTitle">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="historyModalTitle">戦績履歴</h3>
+                    <button id="closeHistoryBtn" class="close-btn" aria-label="閉じる">×</button>
+                </div>
+                <div class="modal-body">
+                    <div id="historyList" class="history-list"></div>
+                </div>
+                <div class="modal-footer">
+                    <button id="clearHistoryBtn" class="btn btn-red">戦績をクリア</button>
+                </div>
+            </div>
+        </aside>
+        
+        <footer>
+            <div class="usage-display" id="usageDisplay">
+                <span class="usage-icon">💳</span>
+                <span class="usage-text" id="usageText">クレジットを読み込み中...</span>
+            </div>
+        </footer>
+    </div>
+
+    <script src="js/GameHistory.js"></script>
+    <script src="js/CharacterDisplay.js"></script>
+    <script src="js/HistoryModal.js"></script>
+    <script src="js/GameUI.js"></script>
+    <script src="js/WebSocketManager.js"></script>
+    <script src="js/UsageMonitor.js"></script>
+    <script src="js/DebateGame.js"></script>
+</body>
+</html>
