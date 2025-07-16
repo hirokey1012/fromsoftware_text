@@ -32,7 +32,7 @@
     background: linear-gradient(135deg, #667eea20, #764ba220);
     border-radius: 15px;
     border: 1px solid #667eea40;
-    font-size: 0.9em;
+    font-size: 1em;
     color: #333;
     font-weight: 500;
 }
@@ -51,12 +51,12 @@
 }
 
 .score-info span:first-child {
-    font-size: 0.9em;
+    font-size: 1em;
     color: #666;
 }
 
 .score-info span:last-child {
-    font-size: 1.2em;
+    font-size: 1.3em;
     font-weight: bold;
     color: #333;
 }
@@ -100,10 +100,11 @@
 }
 
 .message {
-    margin-bottom: 20px;
-    padding: 15px;
+    margin-bottom: 15px;
+    padding: 12px;
     border-radius: 10px;
     animation: fadeIn 0.5s ease-in;
+    font-size: 1.1em;
 }
 
 .message.user {
@@ -120,10 +121,11 @@
 
 .message-header {
     font-weight: bold;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
+    font-size: 1em;
 }
 
 .message-avatar {
@@ -162,12 +164,12 @@
 
 .input-area textarea {
     width: 100%;
-    padding: 15px;
+    padding: 12px;
     border: 2px solid #ddd;
     border-radius: 8px;
-    font-size: 1em;
+    font-size: 1.1em;
     resize: vertical;
-    min-height: 60px;
+    min-height: 50px;
     font-family: inherit;
     box-sizing: border-box;
 }
@@ -183,7 +185,7 @@
 }
 
 .input-area button {
-    padding: 15px 30px;
+    padding: 12px 24px;
     background: linear-gradient(45deg, #667eea, #764ba2);
     color: white;
     border: none;
@@ -210,10 +212,11 @@
 
 /* ステータス */
 .status {
-    padding: 15px 20px;
+    padding: 12px 16px;
     background: #f8f9fa;
     border-top: 1px solid #eee;
     text-align: center;
     font-style: italic;
     color: #666;
+    font-size: 1em;
 }

@@ -26,13 +26,13 @@ header {
 }
 
 header h1 {
-    font-size: 2.5em;
+    font-size: 2.8em;
     margin-bottom: 10px;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
 header p {
-    font-size: 1.1em;
+    font-size: 1.2em;
     opacity: 0.9;
 }
 
@@ -52,7 +52,7 @@ footer {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    font-size: 0.9em;
+    font-size: 1em;
     color: white;
 }
 
@@ -81,7 +81,7 @@ footer {
 
 /* 共通ボタンスタイル */
 .btn {
-    padding: 15px 30px;
+    padding: 12px 24px;
     background: linear-gradient(45deg, #667eea, #764ba2);
     color: white;
     border: none;
