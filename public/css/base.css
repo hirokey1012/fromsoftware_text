@@ -109,6 +109,14 @@ footer {
     background: linear-gradient(45deg, #dc3545, #c82333) !important;
 }
 
+.btn-blue {
+    background: linear-gradient(45deg, #007bff, #0056b3) !important;
+}
+
+.btn-secondary {
+    background: linear-gradient(45deg, #6c757d, #495057) !important;
+}
+
 /* アニメーション */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }

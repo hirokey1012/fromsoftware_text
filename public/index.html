@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="css/game-area.css">
     <link rel="stylesheet" href="css/game-result.css">
     <link rel="stylesheet" href="css/history-modal.css">
+    <link rel="stylesheet" href="css/demo-mode.css">
     <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
@@ -84,6 +85,7 @@
             
             <div class="game-controls">
                 <button id="startBtn" class="btn">ゲーム開始</button>
+                <button id="demoBtnOpener" class="btn btn-blue">見本モード</button>
                 <button id="historyBtn" class="btn btn-green">戦績を見る</button>
             </div>
         </section>
@@ -134,6 +136,74 @@
             </div>
         </section>
 
+        <section class="demo-area" id="demoArea" style="display: none;">
+            <div class="demo-header">
+                <h2>📺 見本モード</h2>
+                <p>四宮玲（賛成派）vs 四宮玲（反対派）の自動議論をご覧ください</p>
+            </div>
+            
+            <div class="demo-characters">
+                <div class="demo-character for-character">
+                    <div class="character-avatar">
+                        <img id="demoForCharacterImage" src="" alt="四宮玲（賛成派）">
+                        <div class="character-emoji" id="demoForCharacterEmoji" style="display: block;">👩‍💼</div>
+                    </div>
+                    <div class="character-name">四宮玲（賛成派）</div>
+                </div>
+                
+                <div class="demo-vs">VS</div>
+                
+                <div class="demo-character against-character">
+                    <div class="character-avatar">
+                        <img id="demoAgainstCharacterImage" src="" alt="四宮玲（反対派）">
+                        <div class="character-emoji" id="demoAgainstCharacterEmoji" style="display: block;">👩‍💼</div>
+                    </div>
+                    <div class="character-name">四宮玲（反対派）</div>
+                </div>
+            </div>
+            
+            <div class="score-section">
+                <div class="topic-display">
+                    <h3 id="demoTopic"></h3>
+                    <div class="vs-display">
+                        <div class="player-stance demo-for">賛成派</div>
+                        <div class="vs-divider">VS</div>
+                        <div class="ai-stance demo-against">反対派</div>
+                    </div>
+                </div>
+                <div class="game-info">
+                    <span class="difficulty-indicator" id="demoDifficultyIndicator">難易度: 中級</span>
+                </div>
+                <div class="score-bar">
+                    <div class="score-info">
+                        <span>賛成派</span>
+                        <span id="forScore">0</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill user-progress" id="forProgress"></div>
+                            <div class="progress-fill ai-progress" id="againstProgress"></div>
+                        </div>
+                    </div>
+                    <div class="score-info">
+                        <span>反対派</span>
+                        <span id="againstScore">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="messages" id="demoMessages" role="log" aria-live="polite"></div>
+            
+            <div class="demo-controls">
+                <button id="stopDemoBtn" class="btn btn-red">デモ停止</button>
+                <button id="returnFromDemoBtn" class="btn btn-secondary">トップページに戻る</button>
+            </div>
+            
+            <div class="status" id="demoStatus" role="status" aria-live="polite">
+                デモの準備中...
+            </div>
+        </section>
+
         <section class="game-result" id="gameResult" style="display: none;">
             <div class="result-content">
                 <h2 id="resultTitle"></h2>
@@ -172,6 +242,7 @@
     <script src="js/GameUI.js"></script>
     <script src="js/WebSocketManager.js"></script>
     <script src="js/UsageMonitor.js"></script>
+    <script src="js/DemoMode.js"></script>
     <script src="js/DebateGame.js"></script>
 </body>
 </html>

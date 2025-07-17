@@ -6,6 +6,7 @@ class DebateGame {
         this.ui = new GameUI();
         this.wsManager = new WebSocketManager();
         this.usageMonitor = new UsageMonitor(this.wsManager);
+        this.demoMode = new DemoMode(this.wsManager);
         
         this.setupEventHandlers();
         this.setupWebSocketHandlers();
@@ -40,7 +41,7 @@ class DebateGame {
             this.ui.setSendButtonState(false, '送信');
             
             if (data.gameResult) {
-                this.handleGameEnd(data.gameResult, data.userScore, data.aiScore);
+                this.handleGameEnd(data.gameResult, data.userScore, data.aiScore, data.expression);
             } else {
                 this.ui.updateStatus('あなたの番です');
             }
@@ -52,6 +53,18 @@ class DebateGame {
 
         this.wsManager.on('connection_error', () => {
             this.ui.updateStatus('エラーが発生しました');
+        });
+
+        this.wsManager.on('demo_started', (data) => {
+            this.demoMode.handleDemoStarted(data);
+        });
+
+        this.wsManager.on('demo_message', (data) => {
+            this.demoMode.handleDemoMessage(data);
+        });
+
+        this.wsManager.on('demo_stopped', (data) => {
+            this.demoMode.updateDemoStatus('デモが停止されました');
         });
     }
 
@@ -95,8 +108,9 @@ class DebateGame {
         }
     }
 
-    handleGameEnd(result, userScore, aiScore) {
+    handleGameEnd(result, userScore, aiScore, expression) {
         this.ui.showResult(result, userScore, aiScore);
+        this.ui.updateCharacterExpression(expression);
         this.ui.showGameResult();
     }
 
