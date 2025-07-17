@@ -76,6 +76,22 @@ wss.on('connection', (ws) => {
           data: usageInfo
         }));
       }
+
+      if (data.type === 'start_demo') {
+        const demoData = await gameHandler.startDemo(ws, data.difficulty);
+        ws.send(JSON.stringify({
+          type: 'demo_started',
+          data: demoData
+        }));
+      }
+
+      if (data.type === 'stop_demo') {
+        gameHandler.stopDemo(data.demoId);
+        ws.send(JSON.stringify({
+          type: 'demo_stopped',
+          data: { demoId: data.demoId }
+        }));
+      }
     } catch (error) {
       console.error('WebSocket message error:', error);
       ws.send(JSON.stringify({
